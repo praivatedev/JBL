@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import TeamsPage from "./teams/page";
+import TeamsPage from "./(admin)/admin/teams/page";
 export default function Home() {
 
   

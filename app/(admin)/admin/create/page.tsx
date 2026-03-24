@@ -1,32 +1,15 @@
 "use client"
 import { useRef, useState } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import TeamsForm from "@/components/teams/TeamsForm";
+import { useMessage } from "@/hooks/showMessage/showMessage";
 
 export default function TeamsPage() {
 
     const [name, setName] = useState("")
     const [file, setFile] = useState<File | null>(null)
-    const [success, setSuccess] = useState("")
-    const [error, setError] = useState("")
     const timeoutRef = useRef<NodeJS.Timeout | null>(null)
-
-    const showMessage = (type: "success" | "error", text: string) => {
-        if (timeoutRef.current) clearTimeout(timeoutRef.current);
-
-        if (type === "success") {
-            setError("")
-            setSuccess(text)
-        } else {
-            setSuccess("")
-            setError(text)
-        }
-
-        timeoutRef.current = setTimeout(() => {
-            setError("")
-            setSuccess("")
-        }, 3000)
-    }
+    const {error, success, showMessage} = useMessage()
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault()

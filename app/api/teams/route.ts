@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getTeamsCollection } from "@/models/teams";
+import { getTeamsCollection } from "@/lib/collections/teams";
 
 export async function POST(req: Request) {
     try {
@@ -9,7 +9,7 @@ export async function POST(req: Request) {
 
         console.log("Request Body:", body)
 
-        if (!name || !logoUrl) {
+        if (!name) {
             return NextResponse.json(
                 { error: "All fields are required!!" },
                 { status: 400 }
@@ -40,13 +40,16 @@ export async function GET() {
     try {
         const teams = await getTeamsCollection()
 
-        const data = await teams.find().sort({createdAt: -1}).toArray()
+        const data = await teams.find().sort({ createdAt: -1 }).toArray()
 
-        return NextResponse.json(data, {status: 200})
-    } catch(error) {
-        NextResponse.json(
-            {error: "Something went wrong!!"},
-            {status: 500}
+        console.log("📦 Teams data:", data);
+
+        return NextResponse.json(data, { status: 200 })
+    } catch (error) {
+        console.log("❌ GET Teams Error:", error);
+        return NextResponse.json(
+            { error: "Something went wrong!!" },
+            { status: 500 }
         )
     }
 } 

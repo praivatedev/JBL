@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 type TeamsFormProps = {
     name: string;
@@ -22,7 +22,7 @@ export default function TeamsForm({
     error
 }: TeamsFormProps) {
     return (
-        <div className="flex justify-center items-center h-screen">
+        <div className="flex justify-center flex-col gap-12 items-center h-screen">
             {success && (
                 <p className="text-green-600 font-semibold">
                     {success}
