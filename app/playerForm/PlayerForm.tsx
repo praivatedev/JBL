@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import sendMessage from "../hooks/message";
+import { useMessage } from "@/hooks/showMessage/showMessage";
 import Message from "@/components/message/Message";
 
 type Team = {
@@ -19,10 +19,9 @@ export default function PlayerForm() {
         isActive: "",
         imgUrl: "",
     });
-    const [error, setError] = useState("");
-    const [suceess, setSuccess] = useState("")
+
     const [teams, setTeam] = useState<Team[]>([])
-    const { message, type, showMessage } = sendMessage();
+    const { message, type, showMessage } = useMessage();
 
     useEffect(() => {
         async function fetchTeams() {
@@ -170,13 +169,6 @@ export default function PlayerForm() {
                 >
                     Register Player
                 </button>
-
-                {/* Error */}
-                {error && (
-                    <p className="col-span-2 text-red-500 text-sm text-center">
-                        {error}
-                    </p>
-                )}
             </form>
         </div>
     )

@@ -8,8 +8,8 @@ firstname: string;
 lastname: string;
 
 age: number;
-height: number;
-weight: number;
+height?: number;
+weight?: number;
 
 position: "shooting-guard" |"point-guard" | "small-forward" | "power-forward" | "center"
 jerseyNumber: number
