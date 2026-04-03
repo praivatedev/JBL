@@ -1,5 +1,3 @@
-"use client"
-
 import { useEffect, useState } from "react"
 import { useMessage } from "@/hooks/showMessage/showMessage";
 
@@ -10,8 +8,8 @@ type Team = {
 };
 export default function TeamsList() {
     const [teams, setTeams] = useState<Team[]>([]);
-    const { error, success, showMessage } = useMessage()
     const [loading, setLoading] = useState(false)
+    const {type, message, showMessage} = useMessage()
 
     useEffect(() => {
         async function fetchTeams() {
@@ -20,11 +18,11 @@ export default function TeamsList() {
                 const data = await res.json()
 
                 if (!res.ok)
-                    return showMessage("error", data.error)
+                    return showMessage(data.error,"error" )
 
                 setTeams(data)
             } catch (error) {
-                showMessage("error", "Something went wrong!!")
+                showMessage("Something went wrong!!!", "error")
             } finally {
                 setLoading(false)
             }
@@ -33,7 +31,17 @@ export default function TeamsList() {
         fetchTeams()
     }, [])
     if (loading) return <p className="p-4">Loading teams...</p>;
-  if (error) return <p className="p-4 text-red-500">{error}</p>;
+  {type === "error" && (
+  <p className="p-4 text-red-500">{message}</p>
+)}
+
+ // Empty state (no teams)
+  if (!teams || teams.length === 0)
+    return (
+      <p className="p-4 text-gray-500 text-center">
+        No teams found in the database.
+      </p>
+    );
 
   return (
     <div className="p-6">

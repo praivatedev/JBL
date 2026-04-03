@@ -1,15 +1,16 @@
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
+type MessageType = "success" | "error" | ""
+
 type TeamsFormProps = {
     name: string;
     setName: React.Dispatch<React.SetStateAction<string>>;
-    file: File | null;
+    // file: File | null;
     setFile: React.Dispatch<React.SetStateAction<File | null>>;
     handleSubmit: (e: React.FormEvent) => void;
-    showMessage: (type: "success" | "error", text: string) => void;
-    success: string;
-    error: string;
+    type: MessageType
+    message: string
 }
 
 export default function TeamsForm({
@@ -17,21 +18,20 @@ export default function TeamsForm({
     setName,
     setFile,
     handleSubmit,
-    showMessage,
-    success,
-    error
+     type,
+     message
 }: TeamsFormProps) {
     return (
         <div className="flex justify-center flex-col gap-12 items-center h-screen">
-            {success && (
+            {type === "success" && (
                 <p className="text-green-600 font-semibold">
-                    {success}
+                    {message}
                 </p>
             )}
 
-            {error && (
+            {type === "error" && (
                 <p className="text-red-600 font-semibold">
-                    {error}
+                    {message}
                 </p>
             )}
             <form onSubmit={handleSubmit} className="flex flex-col gap-12 bg-gray-400 p-4 rounded-xl h-96 items-center justify-center">

@@ -9,13 +9,13 @@ export default function TeamsPage() {
     const [name, setName] = useState("")
     const [file, setFile] = useState<File | null>(null)
     const timeoutRef = useRef<NodeJS.Timeout | null>(null)
-    const {error, success, showMessage} = useMessage()
+    const {type, message, showMessage} = useMessage()
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault()
 
         if (!file)
-            return showMessage("error", "Please upload an image!!")
+            return showMessage("Please upload an image!!", "error")
 
         const formData = new FormData()
         formData.append("file", file)
@@ -29,7 +29,7 @@ export default function TeamsPage() {
             const uploadData = await uploadRes.json()
 
             if (!uploadRes.ok || !uploadData.logoUrl) {
-                return showMessage("error", "Image upload failed!!")
+                return showMessage( "Image upload failed!!", "error",)
             }
 
             const res = await fetch("/api/teams", {
@@ -46,11 +46,11 @@ export default function TeamsPage() {
             const data = await res.json()
 
             if (!res.ok)
-                return showMessage("error", data.error)
+                return showMessage( data.error, "error")
 
-            showMessage("success", data.success)
+            showMessage(data.success, "success")
         } catch (error) {
-            showMessage("error", "Failed to add team!!")
+            showMessage( "Failed to add team!!", "error",)
         }
 
 
@@ -60,12 +60,12 @@ export default function TeamsPage() {
         <TeamsForm
             name={name}
             setName={setName}
-            file={file}
+            // file={file}
             setFile={setFile}
             handleSubmit={handleSubmit}
-            showMessage={showMessage}
-            success={success}
-            error={error}
+            type={type}
+            message={message}
+
         />
     )
 }
