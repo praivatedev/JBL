@@ -4,13 +4,18 @@ import Link from "next/link";
 
 export default function Navbar() {
   return (
-    <nav className="w-full bg-black text-white p-4 flex justify-between">
-      <h1 className="font-bold text-lg">League Manager</h1>
+    <nav className="w-full bg-black text-white px-6 py-4 flex justify-between items-center shadow">
+      
+      {/* Logo */}
+      <h1 className="font-bold text-xl tracking-wide">
+        League Manager
+      </h1>
 
-      <div className="flex gap-6">
-        <Link href="/">Home</Link>
-        <Link href="/teams">Teams</Link>
-        <Link href="/teams/create">Add Team</Link>
+      {/* Links */}
+      <div className="flex gap-6 text-sm font-medium">
+        <Link href="/" className="hover:text-gray-300 transition">Home</Link>
+        <Link href="/teams" className="hover:text-gray-300 transition">Teams</Link>
+        <Link href="/fixtures" className="hover:text-gray-300 transition">Fixtures</Link>
       </div>
     </nav>
   );

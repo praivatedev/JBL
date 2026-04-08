@@ -62,15 +62,46 @@ export async function POST(req: Request) {
     return NextResponse.json({
       success: true,
       stat: {
-        playerId: updatedStat.value?.playerId.toString(),
-        teamId: updatedStat.value?.teamId.toString(),
-        points: updatedStat.value?.points || 0,
-        assists: updatedStat.value?.assists || 0,
-        rebounds: updatedStat.value?.rebounds || 0
+        playerId: updatedStat!.value?.playerId.toString(),
+        teamId: updatedStat!.value?.teamId.toString(),
+        points: updatedStat!.value?.points || 0,
+        assists: updatedStat!.value?.assists || 0,
+        rebounds: updatedStat!.value?.rebounds || 0
       }
     });
   } catch (error) {
     console.error("Stats POST error:", error);
     return NextResponse.json({ error: "Server error" }, { status: 500 });
+  }
+}
+
+
+export async function GET(req: Request) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const fixtureId = searchParams.get("fixtureId");
+
+    if (!fixtureId) 
+      return NextResponse.json({ error: "Missing fixtureId" }, { status: 400 });
+
+    // Validate ObjectId
+    if (!ObjectId.isValid(fixtureId))
+      return NextResponse.json({ error: "Invalid fixtureId" }, { status: 400 });
+
+    const statsCol = await getStatsCollection();
+    
+    const stats = await statsCol.find({ fixtureId: new ObjectId(fixtureId) }).toArray();
+
+    const formattedStats = stats.map(s => ({
+      playerId: s.playerId.toString(),
+      points: s.points ?? 0,
+      assists: s.assists ?? 0,
+      rebounds: s.rebounds ?? 0,
+    }));
+
+    return NextResponse.json(formattedStats, { status: 200 });
+  } catch (err) {
+    console.error("Failed to fetch stats:", err);
+    return NextResponse.json({ error: "Failed to fetch stats" }, { status: 500 });
   }
 }

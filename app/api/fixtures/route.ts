@@ -76,7 +76,7 @@ export async function GET(req: Request) {
 
 export async function PATCH (req: Request) {
     try{
-        const {fixtureId, date} = await req.json()
+        const {fixtureId, date, time} = await req.json()
 
         if (!fixtureId || !date) {
             return NextResponse.json(
@@ -87,11 +87,13 @@ export async function PATCH (req: Request) {
 
         const collection = await getFixturesCollection()
 
+         const combinedDate = new Date(`${date}T${time}`);
+
         const result = await collection.updateOne(
             {_id: new ObjectId(fixtureId)},
                 {
                     $set: {
-                        date: new Date(date),
+                        date: combinedDate,
                         UpdatedAt: new Date
                     }
                 }
