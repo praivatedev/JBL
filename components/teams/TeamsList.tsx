@@ -48,7 +48,7 @@ export default function TeamsList() {
         <div>
       <h1 className="text-2xl font-bold mb-6">Teams</h1>
 
-      <div className="grid gap-6 sm:grid-cols-3 md:grid-cols-3 items-center justify-center w-full">
+      <div className="grid gap-6 md:grid-cols-2 items-center justify-center w-full">
         {teams.map((team) => (
           <div
             key={team._id}
