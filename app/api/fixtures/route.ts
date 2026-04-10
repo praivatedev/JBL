@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { generateFixtures } from "@/lib/generateFixtures";
 import { getFixturesCollection } from "@/lib/collections/fixtures";
-import { lookup } from "dns";
 import { ObjectId } from "mongodb";
 
 export async function POST(req: Request) {
@@ -17,7 +16,7 @@ export async function POST(req: Request) {
         return NextResponse.json(
             { error: "Failed to add matches" },
             { status: 500 }
-        )        
+        )
     }
 }
 
@@ -54,6 +53,9 @@ export async function GET(req: Request) {
                 $project: {
                     date: 1,
                     status: 1,
+                    homeScore: 1,
+                    seasonId: 1,
+                    awayScore: 1,
                     homeTeamName: "$homeTeam.name",
                     homeTeamLogo: "$homeTeam.logoUrl",
                     awayTeamName: "$awayTeam.name",
@@ -74,50 +76,50 @@ export async function GET(req: Request) {
     }
 }
 
-export async function PATCH (req: Request) {
-    try{
-        const {fixtureId, date, time} = await req.json()
+export async function PATCH(req: Request) {
+    try {
+        const { fixtureId, date, time } = await req.json()
 
         if (!fixtureId || !date) {
             return NextResponse.json(
-                {error: "FixtureId and date are required!!" },
-                {status: 400}
+                { error: "FixtureId and date are required!!" },
+                { status: 400 }
             )
         };
 
         const collection = await getFixturesCollection()
 
-         const combinedDate = new Date(`${date}T${time}`);
+        const combinedDate = new Date(`${date}T${time}`);
 
         const result = await collection.updateOne(
-            {_id: new ObjectId(fixtureId)},
-                {
-                    $set: {
-                        date: combinedDate,
-                        UpdatedAt: new Date
-                    }
+            { _id: new ObjectId(fixtureId) },
+            {
+                $set: {
+                    date: combinedDate,
+                    UpdatedAt: new Date
                 }
-            
+            }
+
         )
 
-        if(result.matchedCount === 0){
+        if (result.matchedCount === 0) {
             return NextResponse.json(
-                {error: "Fixture not found!!"},
-                {status: 404}
+                { error: "Fixture not found!!" },
+                { status: 404 }
             )
         }
 
         return NextResponse.json(
-            {success: "Fixture updated successfully"},
-            {status: 200}
+            { success: "Fixture updated successfully" },
+            { status: 200 }
         )
 
 
-    } catch(error) {
+    } catch (error) {
         console.log("PATH ERROR", error)
         return NextResponse.json(
-            {error: error},
-            {status: 500}
+            { error: error },
+            { status: 500 }
         )
     }
 }

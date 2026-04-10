@@ -58,4 +58,43 @@ export async function POST(req: Request) {
     }
 }
 
+export async function GET() {
+  try {
+    const playersCol = await getPlayerCollection();
+
+    const players = await playersCol.find({}).toArray();
+
+    // 🔥 Format for frontend
+    const formatted = players.map((p) => ({
+      _id: p._id.toString(),
+
+      // ✅ Full name
+      name: `${p.firstname} ${p.lastname}`,
+
+      firstname: p.firstname,
+      lastname: p.lastname,
+
+      teamId: p.teamId?.toString(),
+
+      age: p.age,
+      height: p.height ?? null,
+      weight: p.weight ?? null,
+
+      position: p.position,
+      jerseyNumber: p.jerseyNumber,
+
+      isActive: p.isActive ?? true,
+      imgUrl: p.imgUrl ?? null,
+    }));
+
+    return NextResponse.json(formatted, { status: 200 });
+  } catch (error) {
+    console.error("PLAYERS GET ERROR:", error);
+
+    return NextResponse.json(
+      { error: "Failed to fetch players" },
+      { status: 500 }
+    );
+  }
+}
 

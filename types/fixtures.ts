@@ -4,6 +4,8 @@ import { ObjectId } from "mongodb";
 export type fixtures = {
     _id: ObjectId;
 
+    seasonId: ObjectId;
+
     homeTeamId: ObjectId;
     awayTeamId: ObjectId;
 
